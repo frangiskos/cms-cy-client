@@ -335,7 +335,7 @@ const loadArticle = async (name) => {
                 <div class="cms-cy-post__image">
                     <img src="${cmsUrl}/assets/${
         article.article_image.id
-    }?fit=cover&width=1600&height=800&quality=80" alt="${article.article_image.title}" loading="lazy">
+    }?fit=cover&width=800&height=400&quality=80" alt="${article.article_image.title}">
                 </div>
                 ${
                     article.gallery.length
