@@ -14,6 +14,9 @@ const ArticleListComponentQuery = gql`
             offset
             order_by
             order
+            image_width
+            aspect_ratio
+            fit
             has_paging
             include_category_url_param
             include_category_url_path
@@ -95,6 +98,9 @@ const ArticleComponentQuery = gql`
         component_single_article(filter: { name: { _eq: $component }, status: { _eq: "published" } }) {
             article_slug
             custom_code
+            image_width
+            aspect_ratio
+            fit
             project {
                 primary_color
                 secondary_color
@@ -269,9 +275,13 @@ ${articleList
     <a class="cms-cy-posts__item-image" href="${window.location.href.split('/').shift()}/${item.article_page}?article=${
             item.slug
         }">
-      <img src="${cmsUrl}/assets/${item.featured_image.id}?fit=cover&width=400&height=300&quality=80" alt="${
+      <img src="${cmsUrl}/assets/${item.featured_image.id}?fit=${component.fit}&width=${
+            component.image_width
+        }&height=${Math.round(component.image_width * component.aspect_ratio)}&quality=80" alt="${
             item.featured_image.title
-        }" loading="lazy">
+        }" width="${component.image_width}" height="${Math.round(
+            component.image_width * component.aspect_ratio
+        )}" loading="lazy">
     </a>
     <div class="cms-cy-posts__item-content">
       <div class="cms-cy-posts__item-date" style="color: ${component.project.primary_color};">${new Date(
@@ -333,9 +343,11 @@ const loadArticle = async (name) => {
         <div class="cms-cy-post__content">
             <div class="cms-cy-post__media">
                 <div class="cms-cy-post__image">
-                    <img src="${cmsUrl}/assets/${
-        article.article_image.id
-    }?fit=cover&width=800&height=400&quality=80" alt="${article.article_image.title}">
+                    <img src="${cmsUrl}/assets/${article.article_image.id}?fit=${component.fit}&width=${
+        component.image_width
+    }&height=${Math.round(component.image_width * component.aspect_ratio)}&quality=80" alt="${
+        article.article_image.title
+    }" width="${component.image_width}" height="${Math.round(component.image_width * component.aspect_ratio)}">
                 </div>
                 ${
                     article.gallery.length

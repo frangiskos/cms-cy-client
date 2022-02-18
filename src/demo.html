@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://unpkg.com/open-props" />
+        <link rel="stylesheet" href="https://unpkg.com/open-props/normalize.min.css" />
+        <script>
+            cmsUrl = 'https://chemoplus.cms.cy';
+        </script>
+        <!-- <script src="https://cdn.jsdelivr.net/gh/frangiskos/cms-cy-client@v1/src/cms-cy.min.js"></script> -->
+        <script defer src="./cms-cy.js"></script>
+        <title>Demo</title>
+    </head>
+    <body>
+        <style>
+            .card {
+                box-shadow: var(--shadow-4);
+                margin: 64px;
+                padding: 16px;
+                border-radius: 8px;
+            }
+            .card:hover {
+                box-shadow: var(--shadow-5);
+            }
+        </style>
+
+        <div id="single-article" class="card">
+            <link
+                rel="stylesheet"
+                href="https://cdn.jsdelivr.net/gh/assisfery/SocialShareJS@1.4/social-share.min.css"
+            />
+            <script src="https://cdn.jsdelivr.net/gh/assisfery/SocialShareJS@1.4/social-share.min.js"></script>
+            <div class="ss-box" ss-responsive ss-grow data-ss-social="Share, Facebook, Twitter, Messenger, Email"></div>
+            <div class="article" cms-control type="single-article" name="test-article"></div>
+        </div>
+
+        <div id="article-list" class="card">
+            <div cms-control type="article-list" name="test-list"></div>
+        </div>
+    </body>
+</html>
