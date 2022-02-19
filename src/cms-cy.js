@@ -330,7 +330,43 @@ const loadArticle = async (name) => {
     }
     const article = articles[0];
 
-    const template = `
+    let template = '';
+    if (article.gallery.length) {
+        template +=
+            `
+            <div class="cms-cy-post__gallery">
+                <ul>` +
+            article.gallery
+                .map(
+                    (img) => `
+                    <li>
+                        <a href="${cmsUrl}/assets/${img.directus_files_id.id}?fit=cover&width=600&height=600&quality=80" class="glightbox" data-type="image">
+                            <img src="${cmsUrl}/assets/${img.directus_files_id.id}?fit=cover&width=200&height=150&quality=80" alt="${img.directus_files_id.title}" loading="lazy">
+                        </a>
+                    </li>`
+                )
+                .join('') +
+            `
+                </ul>
+            </div>`;
+    }
+    console.log(template);
+    setTimeout(() => {
+        const lightbox = window.GLightbox({
+            selector: '.glightbox',
+            // https://swiperjs.com/demos
+            // touchNavigation: true,
+            // loop: true,
+            // elements: [
+            //     ...article.gallery.map((img) => ({
+            //         href: `${cmsUrl}/assets/${img.directus_files_id.id}?fit=cover&width=600&height=600`,
+            //         type: 'image',
+            //     })),
+            // ],
+        });
+        // lightbox.open(0);
+    }, 0);
+    template += `
     ${component.custom_code ? component.custom_code : ''}
     
     <div id="${name}" class="cms-cy-post__wrapper">
@@ -395,6 +431,9 @@ const loadArticle = async (name) => {
             .cms-cy-posts__wrapper > * {
                 display: flex;
                 flex: 0 1 auto;
+            }
+            .cms-cy-posts__item-wrapper {
+                animation: var(--animation-fade-in) forwards;
             }
             .cms-cy-posts__item {
                 display: flex;

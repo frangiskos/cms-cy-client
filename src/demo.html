@@ -27,17 +27,24 @@
         </style>
 
         <div id="single-article" class="card">
+            <!-- social share -->
             <link
                 rel="stylesheet"
                 href="https://cdn.jsdelivr.net/gh/assisfery/SocialShareJS@1.4/social-share.min.css"
             />
             <script src="https://cdn.jsdelivr.net/gh/assisfery/SocialShareJS@1.4/social-share.min.js"></script>
             <div class="ss-box" ss-responsive ss-grow data-ss-social="Share, Facebook, Twitter, Messenger, Email"></div>
+
+            <!-- gallery -->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+            <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+
+            <!-- article -->
             <div class="article" cms-control type="single-article" name="test-article"></div>
         </div>
 
-        <div id="article-list" class="card">
+        <!-- <div id="article-list" class="card">
             <div cms-control type="article-list" name="test-list"></div>
-        </div>
+        </div> -->
     </body>
 </html>
