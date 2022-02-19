@@ -340,7 +340,7 @@ const loadArticle = async (name) => {
                 .map(
                     (img) => `
                     <li>
-                        <a href="${cmsUrl}/assets/${img.directus_files_id.id}?fit=cover&width=600&height=600&quality=80" class="glightbox" data-type="image">
+                        <a href="${cmsUrl}/assets/${img.directus_files_id.id}" class="glightbox" data-type="image">
                             <img src="${cmsUrl}/assets/${img.directus_files_id.id}?fit=cover&width=200&height=150&quality=80" alt="${img.directus_files_id.title}" loading="lazy">
                         </a>
                     </li>`
@@ -354,7 +354,6 @@ const loadArticle = async (name) => {
     setTimeout(() => {
         const lightbox = window.GLightbox({
             selector: '.glightbox',
-            // https://swiperjs.com/demos
             // touchNavigation: true,
             // loop: true,
             // elements: [
