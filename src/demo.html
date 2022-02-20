@@ -4,10 +4,26 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- open-props -->
         <link rel="stylesheet" href="https://unpkg.com/open-props" />
         <link rel="stylesheet" href="https://unpkg.com/open-props/normalize.min.css" />
-        <script>
-            cmsUrl = 'https://chemoplus.cms.cy';
+
+        <!-- social share -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/assisfery/SocialShareJS@1.4/social-share.min.css" />
+        <script src="https://cdn.jsdelivr.net/gh/assisfery/SocialShareJS@1.4/social-share.min.js"></script>
+
+        <!-- Swiper JS -->
+        <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+        <script defer src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+        <!-- glightbox -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+        <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+
+        <!-- cms-cy -->
+        <script id="cms-cy-api" type="application/json">
+            { "url": "https://chemoplus.cms.cy" }
         </script>
         <!-- <script src="https://cdn.jsdelivr.net/gh/frangiskos/cms-cy-client@v1/src/cms-cy.min.js"></script> -->
         <script defer src="./cms-cy.js"></script>
@@ -27,17 +43,7 @@
         </style>
 
         <div id="single-article" class="card">
-            <!-- social share -->
-            <link
-                rel="stylesheet"
-                href="https://cdn.jsdelivr.net/gh/assisfery/SocialShareJS@1.4/social-share.min.css"
-            />
-            <script src="https://cdn.jsdelivr.net/gh/assisfery/SocialShareJS@1.4/social-share.min.js"></script>
             <div class="ss-box" ss-responsive ss-grow data-ss-social="Share, Facebook, Twitter, Messenger, Email"></div>
-
-            <!-- gallery -->
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
-            <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
 
             <!-- article -->
             <div class="article" cms-control type="single-article" name="test-article"></div>
