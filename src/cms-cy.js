@@ -144,6 +144,14 @@
                         title
                     }
                 }
+                files(sort: "sort") {
+                    directus_files_id {
+                        id
+                        title
+                        description
+                        filename_download
+                    }
+                }
             }
         }
     `;
@@ -377,8 +385,33 @@ ${articleList
         <div class="cms-cy-post__content">
             <div class="cms-cy-post__media">
                 ${
-                    article.gallery.length
+                    article.gallery.length === 0
                         ? `
+                <div class="cms-cy-post__image">
+                    <img src="${cmsUrl}/assets/${article.article_image.id}?fit=${component.fit}&width=${
+                              component.image_width
+                          }&height=${Math.round(component.image_width * component.aspect_ratio)}&quality=80" alt="${
+                              article.article_image.title
+                          }" width="${component.image_width}" height="${Math.round(
+                              component.image_width * component.aspect_ratio
+                          )}">
+                </div>`
+                        : article.gallery.length === 1
+                        ? `
+                <div class="cms-cy-post__image">
+                    <a href="${cmsUrl}/assets/${
+                              article.gallery[0].directus_files_id.id
+                          }" class="glightbox" data-type="image">
+                        <img src="${cmsUrl}/assets/${article.gallery[0].directus_files_id.id}?fit=${
+                              component.fit
+                          }&width=${component.image_width}&height=${Math.round(
+                              component.image_width * component.aspect_ratio
+                          )}&quality=80" alt="${article.article_image.title}" width="${
+                              component.image_width
+                          }" height="${Math.round(component.image_width * component.aspect_ratio)}" loading="lazy" />
+                    </a>
+                </div>`
+                        : `
                 <div class="cms-cy-post__gallery">
                     <!-- Swiper -->
                     <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff; --swiper-navigation-size: 20px;" class="swiper mySwiper2">
@@ -429,18 +462,36 @@ ${articleList
                         </div>
                     </div>
                 </div>`
-                        : `
-                <div class="cms-cy-post__image">
-                    <img src="${cmsUrl}/assets/${article.article_image.id}?fit=${component.fit}&width=${
-                              component.image_width
-                          }&height=${Math.round(component.image_width * component.aspect_ratio)}&quality=80" alt="${
-                              article.article_image.title
-                          }" width="${component.image_width}" height="${Math.round(
-                              component.image_width * component.aspect_ratio
-                          )}">
-                </div>
-        `
                 }
+                ${
+                    article.files.length
+                        ? `
+                <div class="cms-cy-post__files">
+                    ${article.files
+                        .map(
+                            (file) => `
+                    <div class="cms-cy-post__file">
+                        <a
+                            ${file.directus_files_id.description ? 'class="tooltip"' : ''}
+                            href="${cmsUrl}/assets/${file.directus_files_id.id}?download" target="_blank" download="${
+                                file.directus_files_id.filename_download
+                            }">
+                            ${
+                                file.directus_files_id.description
+                                    ? `<span class="tooltip_text">` + file.directus_files_id.description + `</span>`
+                                    : ''
+                            }
+                                ${file.directus_files_id.title}
+                        </a>
+                    </div>`
+                        )
+                        .join('')}
+                </div>`
+                        : ''
+                }
+
+
+
             </div>
             <div class="cms-cy-post__body">${article.body}</div>
         </div>
@@ -525,6 +576,52 @@ ${articleList
                 .cms-cy-post__wrapper .cms-cy-post__date {
                     margin-bottom: 16px;
                 }
+
+                .cms-cy-post__wrapper .cms-cy-post__files a {
+                    color: rgb(66, 99, 235);
+                    text-decoration: none;
+                    font-size: 1.1em;
+                }
+                .cms-cy-post__wrapper .cms-cy-post__files a:hover {
+                    text-decoration: underline;
+                }
+                .cms-cy-post__wrapper .tooltip {
+                    position: relative;
+                    display: inline-block;
+                }
+                .cms-cy-post__wrapper .tooltip .tooltip_text {
+                    visibility: hidden;
+                    width: 180px;
+                    background-color: #555;
+                    color: #fff;
+                    text-align: center;
+                    border-radius: 6px;
+                    padding: 5px 10px;
+                    position: absolute;
+                    z-index: 1;
+                    bottom: 125%;
+                    left: 50%;
+                    transform: translate3d(-50%, 0, 0);
+                    opacity: 0;
+                    transition: opacity 0.3s;
+                    white-space: pre-wrap;
+                    word-break: break-word;
+                }
+                .cms-cy-post__wrapper .tooltip .tooltip_text::after {
+                    content: '';
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    margin-left: -5px;
+                    border-width: 5px;
+                    border-style: solid;
+                    border-color: #555 transparent transparent transparent;
+                }
+                .cms-cy-post__wrapper .tooltip:hover .tooltip_text {
+                    visibility: visible;
+                    opacity: 1;
+                }
+
                 @media (max-width: 767px) {
                     .cms-cy-post__wrapper {
                         margin-bottom: 24px;
