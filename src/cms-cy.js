@@ -57,7 +57,7 @@
         #graphql
         query ArticleList(
             $categories: [String]
-            $articleIds: [Float]
+            $articleIds: [GraphQLStringOrFloat]
             $sortField: [String] = ["-date_published"]
             $offset: Int = 0
             $limit: Int = 100
