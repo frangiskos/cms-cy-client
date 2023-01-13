@@ -1,10 +1,13 @@
 (() => {
     let cmsUrl = '';
+    let project = '';
     try {
         cmsUrl = JSON.parse(document.getElementById('cms-cy-api').text).url;
+        project = JSON.parse(document.getElementById('cms-cy-api').text).project;
+        if (!cmsUrl || !project) throw new Error('API URL or project not defined.');
     } catch (error) {
-        console.error(`API URL Not defined. You can set it by including the following script in your page:
-    <script id="cms-cy-api" type="application/json">{ "url": "https://projectapi.cms.cy" }</script>
+        console.error(`API URL or project not defined. You can set it by including the following script in your page:
+    <script id="cms-cy-api" type="application/json">{ "url": "https://projectapi.cms.cy", "project": "project-name" }</script>
     \n\n${error}`);
     }
 
@@ -13,9 +16,17 @@
     const css = String.raw;
 
     const ArticleListComponentQuery = gql`
-        query ArticleListComponent($component: String) {
+        query ArticleListComponent($project: String, $component: String) {
             #graphql
-            component_article_list(filter: { name: { _eq: $component }, status: { _eq: "published" } }) {
+            component_article_list(
+                filter: {
+                    _and: [
+                        { project: { code: { _eq: $project } } }
+                        { name: { _eq: $component } }
+                        { status: { _eq: "published" } }
+                    ]
+                }
+            ) {
                 columns
                 rows
                 spacing
@@ -57,6 +68,7 @@
     const ArticleListQuery = gql`
         #graphql
         query ArticleList(
+            $project: String
             $categories: [String]
             $articleIds: [GraphQLStringOrFloat]
             $sortField: [String] = ["-date_published"]
@@ -70,6 +82,7 @@
                 page: $page
                 filter: {
                     _and: [
+                        { project: { code: { _eq: $project } } }
                         { is_feature: $isFeatureFilterOperator }
                         {
                             _or: [
@@ -105,6 +118,7 @@
             Articles_aggregated(
                 filter: {
                     _and: [
+                        { project: { code: { _eq: $project } } }
                         { is_feature: $isFeatureFilterOperator }
                         {
                             _or: [
@@ -123,9 +137,15 @@
     `;
 
     const ArticleComponentQuery = gql`
-        query ArticleComponent($component: String) {
+        query ArticleComponent($project: String, $component: String) {
             #graphql
-            component_single_article(filter: { name: { _eq: $component }, status: { _eq: "published" } }) {
+            component_single_article(
+                filter: {
+                    project: { code: { _eq: $project } }
+                    name: { _eq: $component }
+                    status: { _eq: "published" }
+                }
+            ) {
                 article_slug
                 custom_code
                 image_width
@@ -141,8 +161,8 @@
 
     const ArticleQuery = gql`
         #graphql
-        query Article($slug: String) {
-            Articles(filter: { slug: { _eq: $slug } }) {
+        query Article($project: String, $slug: String) {
+            Articles(filter: { project: { code: { _eq: $project } }, slug: { _eq: $slug } }) {
                 title
                 body
                 date_published
@@ -178,8 +198,8 @@
 
     const ArticleCategoriesQuery = gql`
         #graphql
-        query ArticleCategories($slug: String) {
-            Articles(filter: { slug: { _eq: $slug } }) {
+        query ArticleCategories($project: String, $slug: String) {
+            Articles(filter: { project: { code: { _eq: $project } }, slug: { _eq: $slug } }) {
                 article_categories {
                     ArticleCategories_id {
                         id
@@ -221,7 +241,7 @@
     };
 
     const loadArticleList = async (name) => {
-        const articleListComponent = await getData(ArticleListComponentQuery, { component: name });
+        const articleListComponent = await getData(ArticleListComponentQuery, { component: name, project });
         if (!articleListComponent || !articleListComponent.length || !articleListComponent[0].length) {
             console.error(`CMS Error: component "${name}" is not configured`);
             return '';
@@ -243,7 +263,7 @@
             if (component.include_article_url_param) {
                 const articleSlug = urlParams.get('article');
                 if (articleSlug) {
-                    const articleCategories = await getData(ArticleCategoriesQuery, { slug: articleSlug });
+                    const articleCategories = await getData(ArticleCategoriesQuery, { project, slug: articleSlug });
                     if (articleCategories && articleCategories.length && articleCategories[0].length) {
                         categories.push(
                             ...articleCategories[0][0].article_categories.map((cat) => cat.ArticleCategories_id.slug)
@@ -282,6 +302,7 @@
         }
 
         const articleList = await getData(ArticleListQuery, {
+            project,
             categories: categories.length ? categories : [''],
             articleIds: articles.length ? articles : [-1],
             sortField: (component.order === 'desc' ? '-' : '') + component.order_by,
@@ -412,12 +433,12 @@ ${articleList[0]
     };
 
     const loadArticle = async (name) => {
-        const articleComponent = await getData(ArticleComponentQuery, { component: name });
-        if (!articleComponent || !articleComponent.length) {
+        const articleComponent = await getData(ArticleComponentQuery, { project, component: name });
+        if (!articleComponent || !articleComponent.length || !articleComponent[0].length) {
             console.error(`CMS Error: component "${name}" is not configured`);
             return '';
         }
-        const component = articleComponent[0];
+        const component = articleComponent[0][0];
         let slug = component.article_slug;
 
         if (slug === 'url') {
@@ -429,12 +450,12 @@ ${articleList[0]
             }
         }
 
-        const articles = await getData(ArticleQuery, { slug });
-        if (!articles || !articles.length) {
+        const articles = await getData(ArticleQuery, { project, slug });
+        if (!articles || !articles.length || !articles[0].length) {
             console.error(`CMS Error: component "${name}" failed to load article "${slug}"`);
             return '';
         }
-        const article = articles[0];
+        const article = articles[0][0];
 
         if (article.gallery.length) {
             setTimeout(() => {
