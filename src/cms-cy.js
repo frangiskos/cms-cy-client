@@ -772,6 +772,7 @@ ${articleList[0]
                     min-height: 40px;
                     margin: 0;
                     padding: 0;
+                    border-color: rgba(0,0,0,0.16);
                 }
 
                 .cms-cy-posts__paging a:visited {
