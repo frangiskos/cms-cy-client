@@ -512,7 +512,9 @@ ${articleList[0]
                                   component.image_width * component.aspect_ratio
                               )}">
                 </div>`
-                            : `<div class="cms-cy-post__no-image" style="aspect-ratio:${1 / component.aspect_ratio}"></div>`
+                            : `<div class="cms-cy-post__no-image" style="aspect-ratio:${
+                                  1 / component.aspect_ratio
+                              }"></div>`
                         : article.gallery.length === 1
                         ? `
                 <div class="cms-cy-post__image">
@@ -647,7 +649,7 @@ ${articleList[0]
                 }
                 .cms-cy-posts__item .cms-cy-posts__item-no-image {
                     width: 100%;
-                    background-color: rgba(255,255,255,0.5);
+                    background: #f5f5f5;
                 }
                 .cms-cy-posts__item .cms-cy-posts__item-content {
                     display: flex;
