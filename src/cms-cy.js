@@ -378,13 +378,17 @@ ${articleList[0]
     <a class="cms-cy-posts__item-image" href="${window.location.href.split('/').shift()}/${item.article_page}?article=${
             item.slug
         }">
-      <img src="${cmsUrl}/assets/${item.featured_image.id}?fit=${component.fit}&width=${
-            component.image_width
-        }&height=${Math.round(component.image_width * component.aspect_ratio)}&quality=80" alt="${
-            item.featured_image.title
-        }" width="${component.image_width}" height="${Math.round(
-            component.image_width * component.aspect_ratio
-        )}" loading="lazy">
+        ${
+            item.featured_image
+                ? `<img src="${cmsUrl}/assets/${item.featured_image.id}?fit=${component.fit}&width=${
+                      component.image_width
+                  }&height=${Math.round(component.image_width * component.aspect_ratio)}&quality=80" alt="${
+                      item.featured_image.title
+                  }" width="${component.image_width}" height="${Math.round(
+                      component.image_width * component.aspect_ratio
+                  )}" loading="lazy">`
+                : `<div class="cms-cy-posts__item-no-image" style="aspect-ratio:${component.aspect_ratio}"></div>`
+        }
     </a>
     <div class="cms-cy-posts__item-content">
       <div class="cms-cy-posts__item-date" style="color: ${component.project.primary_color};">${new Date(
@@ -402,6 +406,7 @@ ${articleList[0]
 `
     )
     .join('')}
+            </div>
     ${
         component.has_paging && pages.length > 1
             ? `<div class="cms-cy-posts__paging">
@@ -426,7 +431,7 @@ ${articleList[0]
     </div>`
             : ''
     }
-</div>
+
 `;
 
         return template;
@@ -496,16 +501,18 @@ ${articleList[0]
             <div class="cms-cy-post__media">
                 ${
                     article.gallery.length === 0
-                        ? `
+                        ? article.article_image
+                            ? `
                 <div class="cms-cy-post__image">
                     <img src="${cmsUrl}/assets/${article.article_image.id}?fit=${component.fit}&width=${
-                              component.image_width
-                          }&height=${Math.round(component.image_width * component.aspect_ratio)}&quality=80" alt="${
-                              article.article_image.title
-                          }" width="${component.image_width}" height="${Math.round(
-                              component.image_width * component.aspect_ratio
-                          )}">
+                                  component.image_width
+                              }&height=${Math.round(component.image_width * component.aspect_ratio)}&quality=80" alt="${
+                                  article.article_image.title
+                              }" width="${component.image_width}" height="${Math.round(
+                                  component.image_width * component.aspect_ratio
+                              )}">
                 </div>`
+                            : `<div class="cms-cy-post__no-image" style="aspect-ratio:${component.aspect_ratio}"></div>`
                         : article.gallery.length === 1
                         ? `
                 <div class="cms-cy-post__image">
@@ -516,7 +523,7 @@ ${articleList[0]
                               component.fit
                           }&width=${component.image_width}&height=${Math.round(
                               component.image_width * component.aspect_ratio
-                          )}&quality=80" alt="${article.article_image.title}" width="${
+                          )}&quality=80" alt="${article.gallery[0].directus_files_id.title}" width="${
                               component.image_width
                           }" height="${Math.round(component.image_width * component.aspect_ratio)}" loading="lazy" />
                     </a>
@@ -537,7 +544,7 @@ ${articleList[0]
                                         component.image_width
                                     }&height=${Math.round(
                                         component.image_width * component.aspect_ratio
-                                    )}&quality=80" alt="${article.article_image.title}" width="${
+                                    )}&quality=80" alt="${img.directus_files_id.title}" width="${
                                         component.image_width
                                     }" height="${Math.round(component.image_width * component.aspect_ratio)}" ${
                                         ix > 1 ? 'loading="lazy"' : ''
@@ -638,6 +645,10 @@ ${articleList[0]
                 .cms-cy-posts__item .cms-cy-posts__item-image {
                     margin-bottom: 1.2rem;
                 }
+                .cms-cy-posts__item .cms-cy-posts__item-no-image {
+                    width: 100%;
+                    background-color: rgba(255,255,255,0.5);
+                }
                 .cms-cy-posts__item .cms-cy-posts__item-content {
                     display: flex;
                     flex-direction: column;
@@ -674,6 +685,10 @@ ${articleList[0]
                 .cms-cy-post__wrapper .cms-cy-post__image img {
                     width: 100%;
                     height: auto;
+                }
+                .cms-cy-post__wrapper .cms-cy-post__no-image {
+                    width: 100%;
+                    background: #f5f5f5;
                 }
                 .cms-cy-post__wrapper .cms-cy-post__gallery {
                     display: flex;
@@ -739,7 +754,8 @@ ${articleList[0]
                 }
 
                 .cms-cy-posts__paging {
-                    margin-top: 40px;
+                    display: flex;
+                    margin: 60px auto;
                     box-shadow: 0 4px 12px rgb(100 100 100 / 60%);
                     border-radius: 500px;
                     width: fit-content !important;
