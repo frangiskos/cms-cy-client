@@ -387,7 +387,7 @@ ${articleList[0]
                   }" width="${component.image_width}" height="${Math.round(
                       component.image_width * component.aspect_ratio
                   )}" loading="lazy">`
-                : `<div class="cms-cy-posts__item-no-image" style="aspect-ratio:${component.aspect_ratio}"></div>`
+                : `<div class="cms-cy-posts__item-no-image" style="aspect-ratio:${1 / component.aspect_ratio}"></div>`
         }
     </a>
     <div class="cms-cy-posts__item-content">
@@ -512,7 +512,7 @@ ${articleList[0]
                                   component.image_width * component.aspect_ratio
                               )}">
                 </div>`
-                            : `<div class="cms-cy-post__no-image" style="aspect-ratio:${component.aspect_ratio}"></div>`
+                            : `<div class="cms-cy-post__no-image" style="aspect-ratio:${1 / component.aspect_ratio}"></div>`
                         : article.gallery.length === 1
                         ? `
                 <div class="cms-cy-post__image">
