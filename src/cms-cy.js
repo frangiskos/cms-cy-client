@@ -112,6 +112,7 @@
                         id
                         title
                         slug
+                        article_page
                     }
                 }
             }
@@ -372,12 +373,12 @@ ${component.custom_code ? component.custom_code : ''}
 <div id="${name}" class="cms-cy-posts__wrapper">
 ${articleList[0]
     .map(
-        (item) => `
+        (item) => {
+            const articleHref = `/${item.article_page || item.article_categories[0].ArticleCategories_id.article_page}?article=${item.slug}`;
+            return `
 <div class="cms-cy-posts__item-wrapper">
   <div class="cms-cy-posts__item">
-    <a class="cms-cy-posts__item-image" href="${window.location.href.split('/').shift()}/${item.article_page}?article=${
-            item.slug
-        }">
+    <a class="cms-cy-posts__item-image" href="${articleHref}">
         ${
             item.featured_image
                 ? `<img src="${cmsUrl}/assets/${item.featured_image.id}?fit=${component.fit}&width=${
@@ -394,16 +395,14 @@ ${articleList[0]
       <div class="cms-cy-posts__item-date" style="color: ${component.project.primary_color};">${new Date(
             item.date_published
         ).toLocaleDateString('en-UK')}</div>
-      <a class="cms-cy-posts__item-title" href="${window.location.href.split('/').shift()}/${
-            item.article_page
-        }?article=${item.slug}">
+      <a class="cms-cy-posts__item-title" href="${articleHref}">
           <h3>${item.title}</h3>
       </a>
       ${item.excerpt ? '<p class="cms-cy-posts__item-excerpt">' + item.excerpt + '</p>' : ''}
     </div>
   </div>
 </div>
-`
+`}
     )
     .join('')}
             </div>
